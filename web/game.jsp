@@ -4,7 +4,8 @@
     Author     : sand
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page contentType="text/html" pageEncoding="UTF-8" import="galgeleg.*, brugerautorisation.transport.rmi.Brugeradmin;
+"%>
 <!DOCTYPE html>
 <html>
     <head>
@@ -14,10 +15,20 @@
 
     <body>
         <jsp:useBean id="executioner" scope="session" class="galgeleg.loginHandler" />
-        <jsp:setProperty name="executioner" property="name" />
-        <jsp:setProperty name="executioner" property="password" />
+        <!--
+        jsp:setProperty name="executioner" property="name" />
+        jsp:setProperty name="executioner" property="password" />
+        -->
+        <%
+            String name = request.getParameter("name");
+            String password = request.getParameter("password");
+            
+            private Brugeradmin BI;
+          
+
+        %>      
         
-        <h1>Hello, <jsp:getProperty name="executioner" property="name" />!</h1>
+        <h1>Hello, <% out.print(name); %>!</h1>
         <h2>Welcome to a game of Hangman</h2>
         
         <img src="hangman.jpg" width="100" height="80" alt="Hangman"/>

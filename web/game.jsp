@@ -4,37 +4,59 @@
     Author     : sand
 --%>
 
-<%@page contentType="text/html" pageEncoding="UTF-8" import="galgeleg.*, brugerautorisation.transport.rmi.Brugeradmin;
-"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@page import="javax.jws.WebService" %>
+<%@page import="javax.jws.WebMethod" %>
+<%@page import="java.rmi.RemoteException" %>
+<%@page import="java.rmi.Naming"%>
+<%@page import="galgeleg.*" %>
 <!DOCTYPE html>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>Hangman Game</title>
+        <title>Hangman</title>
     </head>
 
     <body>
-        <jsp:useBean id="executioner" scope="session" class="galgeleg.loginHandler" />
-        <!--
-        jsp:setProperty name="executioner" property="name" />
-        jsp:setProperty name="executioner" property="password" />
-        -->
         <%
-            String name = request.getParameter("name");
-            String password = request.getParameter("password");
+            String userName = (String)session.getAttribute("pName");
+            GalgeInterface spil = (GalgeInterface) Naming.lookup("rmi://ubuntu4.saluton.dk:9919/GalgeServer?wsdl");
             
-            private Brugeradmin BI;
-          
-
+            //Service service = Service.create(url, qname);
+            //GalgeInterface spil = service.getPort(GalgeInterface.class);
+            
+            boolean gameOn = true;
+            String guess;
+            //Scanner input = new Scanner(System.in);
+            
+            int wLength = 5;
+            
+            while (gameOn){
+                //System.out.println("Indtast ét bogstav");
+                guess = input.next();
+                spil.gætBogstav(guess);   
+                //System.out.println(spil.outputTilKlient());
+                spil.logStatus();       
+                //System.out.println(spil.outputTilKlient());    
+                if (spil.erSpilletSlut()) gameOn = false;
+            }
+            
         %>      
         
-        <h1>Hello, <% out.print(name); %>!</h1>
+        <h1>Hello, <%= userName %>!</h1>
         <h2>Welcome to a game of Hangman</h2>
         
         <img src="hangman.jpg" width="100" height="80" alt="Hangman"/>
-        <p>Can you quess the word? Try to quess the word! If you type a wrong letter seven times, you're out..</p>
-        <p>The letter you need to quess, is typed with _ under here:</p> 
-        <p>_ _ _ _ _ _ _ _ _ _</p>
+        <p>Can you quess the word?<br>
+            Try to quess the word! If you type a wrong letter seven times, you're out..</p>
+        <p>The word you need to quess, is <b><%= wLength %></b> characters long:</p> 
+        <p> &nbsp;
+            <%
+                for (int i = 0; i < wLength; i++){
+                    out.write("_&nbsp; &nbsp; ");
+                }
+            %>
+        </p>
         <form>
 
             Type in a letter:<input type="text" name="firstname" size="6">

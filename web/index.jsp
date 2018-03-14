@@ -83,9 +83,9 @@
             
             <div class="container">
             <%
-                if(errorCode==1) out.println("<font color=\"red\"><b><i>Login error: Wrong username og password<br>Try again!</i></b></font><p>");
+                if(errorCode==1) out.println("<font color=\"red\"><b><i>Login error: Wrong username or password<br>Try again!</i></b></font><p>");
             %>
-            <label for="name"><b>Brugernavn</b></label>
+            <label for="name"><b>Username</b></label>
             <input type="text" placeholder="Enter username here..." name="name" required>
             <label for="password"><b>Password</b></label>            
             <input type="password" placeholder="Enter password here..." name="password" required>

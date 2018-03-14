@@ -23,6 +23,8 @@
     <body>
         <%
             String userName = (String)session.getAttribute("pName");
+            if (userName == null) response.sendRedirect("index.jsp");
+            
             String guessChar ="";
             URL url = new URL("http://ubuntu4.saluton.dk:9796/GalgeServer?wsdl"); // soap - Forbinder til det navn serveren udgiver sig på "GalgeServer"
             QName qname = new QName("http://galgeleg/", "GalgelogikService");

@@ -24,19 +24,24 @@
         <%
             String userName = (String)session.getAttribute("pName");
             String guessChar ="";
-            URL url = new URL("http://ubuntu4.saluton.dk:9496/GalgeServer?wsdl"); // soap - Forbinder til det navn serveren udgiver sig på "GalgeServer"
+            URL url = new URL("http://ubuntu4.saluton.dk:9796/GalgeServer?wsdl"); // soap - Forbinder til det navn serveren udgiver sig på "GalgeServer"
             QName qname = new QName("http://galgeleg/", "GalgelogikService");
         
             Service service = Service.create(url, qname);
             GalgeInterface spil = service.getPort(GalgeInterface.class);
             
-            boolean gameOn = true;
+            if (request.getParameter("reset") != null) spil.nulstil();
+
+            boolean gameOn = spil.erSpilletSlut();
+            
             String guess = request.getParameter("guess");
             if (guess != null) {
                 spil.gætBogstav(guess);
             } 
-            int wLength = 5;
-            int guessLeft = 7;
+            String secret = spil.getOrdet();
+            int wLength = secret.length();
+            
+            int guessLeft = 7 - spil.getAntalForkerteBogstaver();
             
             /**
             while (gameOn){
@@ -70,17 +75,24 @@
         <p>The word you need to quess, is <b><%= wLength %></b> characters long:</p> 
         <p> &nbsp;
             <%
-                for (int i = 0; i < wLength; i++){
-                    out.write("_&nbsp; &nbsp; ");
-                }
-                guessChar = guessChar + spil.outputTilKlient() + " ";
-                out.write("<br><br>" + guessChar + "<br>" + spil.logStatus() );
+                
+                out.write("<h3>" + spil.getSynligtOrd() + "</h3>");
+                if (spil.erSpilletVundet()) out.write("<h3>Congrats! You have won!</h3>");
+                if (spil.erSpilletTabt()) out.write("<h3>Looser! Better luck next time...</h3>");
+                if (request.getParameter("reset") == null) out.write(spil.outputTilKlient());
+                out.write("<br><br>Guessed characters: " + spil.getBrugteBogstaver());
+                out.write("<br><h4>You have " + guessLeft + " guesses left.</h4>");
             %>
         </p>
-        <form name="guess_btn" action="game.jsp" method="POST">
-
-            Type in a letter:<input type="text" name="guess" size="2">
+        <form name="guess" action="game.jsp" method="POST">
+            Type in a letter:<input type="text" name="guess" size="2" autofocus>
             <button type="button" >Guess</button>
         </form>
+        <form name="reset" action="game.jsp" method="POST">
+            <button type="submit" value="reset" name="reset"/>Reset</button>
+        </form>
+        <!--<form name="logout" action="loginProcess.jsp" method="POST">
+           <button type="submit" value="login" name="login"/>Logout</button>
+        </form> -->
     </body>
 </html>

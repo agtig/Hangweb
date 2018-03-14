@@ -38,6 +38,7 @@
         public boolean loginSuccess(String userName, String password){
         boolean success;
         
+        //success = true;
         try {
             Brugeradmin ba = (Brugeradmin)Naming.lookup("rmi://javabog.dk/brugeradmin");
             Bruger b = ba.hentBruger(userName, password);
